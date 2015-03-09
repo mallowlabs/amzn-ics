@@ -14,7 +14,7 @@ html
     nav.navbar.navbar-fixed-top.navbar-inverse role='navigation'
       .container
         .navbar-header
-          = link_to image_tag(asset_path('logo-white.png')), {controller: 'top'}, class: 'navbar-brand'
+          = link_to t(:app_title), {controller: 'top'}, class: 'navbar-brand'
           button.navbar-toggle type='button' data-toggle='collapse' data-target='#nav-content'
             span.icon-bar
             span.icon-bar
@@ -42,4 +42,4 @@ html
       = yield
 
       footer
-        p &copy; XXXXXX
+        p &copy; 2015 mallowlabs
