@@ -1,0 +1,24 @@
+= form_for @item do |f|
+  - if @item.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@item.errors.count, "error")} prohibited this item from being saved:"
+      ul
+        - @item.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :user_id
+    = f.number_field :user_id
+  .field
+    = f.label :asin
+    = f.text_field :asin
+  .field
+    = f.label :title
+    = f.text_field :title
+  .field
+    = f.label :thumb_url
+    = f.text_field :thumb_url
+  .field
+    = f.label :release_date
+    = f.datetime_select :release_date
+  .actions = f.submit
