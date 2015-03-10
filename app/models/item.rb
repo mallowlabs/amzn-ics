@@ -7,6 +7,8 @@ class Item < ActiveRecord::Base
   default_scope { includes(:user).order('release_date DESC') }
   scope :recent, -> { where(arel_table[:release_date].gt 1.months.ago) }
 
+  UserAgent = 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0)'
+
   def to_ics
     event = Icalendar::Event.new
     event.dtstart = Icalendar::Values::Date.new(self.release_date, {'TZID' => ['Asia/Tokyo']})
@@ -22,11 +24,11 @@ class Item < ActiveRecord::Base
 
   def self.from_url(url)
     asin = url_to_asin(url.to_s)
-    asin_to_item(asin)
+    asin_to_item_with_retry(asin)
   end
 
   def self.url_to_asin(url)
-    doc = Nokogiri::HTML(OpenURI.open_uri(url))
+    doc = Nokogiri::HTML(OpenURI.open_uri(url, 'User-Agent' => UserAgent))
     doc.css("#ASIN").first["value"] rescue nil
   end
 
@@ -38,6 +40,21 @@ class Item < ActiveRecord::Base
     item.release_date = res.get('ItemAttributes/ReleaseDate')
     item.thumb_url = res.get('ImageSets/ImageSet/SmallImage/URL')
     item
+  end
+
+  def self.asin_to_item_with_retry(asin)
+    retry_count = 0
+    begin
+      return self.asin_to_item(asin)
+    rescue => e
+      retry_count += 1
+      logger.error e.message
+      if retry_count < 5
+        sleep(3)
+        retry
+      end
+    end
+    return nil
   end
 end
 
