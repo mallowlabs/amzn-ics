@@ -4,6 +4,8 @@ class Item < ActiveRecord::Base
 
   attr_accessor :url
 
+  validates_uniqueness_of :asin
+
   default_scope { includes(:user).order('release_date DESC') }
   scope :recent, -> { where(arel_table[:release_date].gt 1.months.ago) }
 
