@@ -1,10 +1,25 @@
 class ItemsController < ApplicationController
-  before_action :set_item, only: [:show, :edit, :update, :destroy]
+  before_action :set_item, only: [:show, :update, :destroy]
+  before_action :validate_user, only: [:create, :new, :destroy]
 
   # GET /items
   # GET /items.json
+  # GET /items.ics
   def index
-    @items = Item.all
+    @items = Item.recent
+    respond_to do |format|
+      format.html
+      format.json
+      format.ics do
+        calendar = Icalendar::Calendar.new
+        calendar.append_custom_property('X-WR-CALNAME;VALUE=TEXT', "amzn-ics")
+        @items.each do |item|
+          calendar.add_event(item.to_ics)
+        end
+        calendar.publish
+        render text: calendar.to_ical
+      end
+    end
   end
 
   # GET /items/1
@@ -17,18 +32,15 @@ class ItemsController < ApplicationController
     @item = Item.new
   end
 
-  # GET /items/1/edit
-  def edit
-  end
-
   # POST /items
   # POST /items.json
   def create
-    @item = Item.new(item_params)
+    @item = Item.from_url(item_params[:url])
+    @item.user = current_user
 
     respond_to do |format|
       if @item.save
-        format.html { redirect_to @item, notice: 'Item was successfully created.' }
+        format.html { redirect_to items_path, notice: 'Item was successfully created.' }
         format.json { render :show, status: :created, location: @item }
       else
         format.html { render :new }
@@ -37,23 +49,10 @@ class ItemsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /items/1
-  # PATCH/PUT /items/1.json
-  def update
-    respond_to do |format|
-      if @item.update(item_params)
-        format.html { redirect_to @item, notice: 'Item was successfully updated.' }
-        format.json { render :show, status: :ok, location: @item }
-      else
-        format.html { render :edit }
-        format.json { render json: @item.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
   # DELETE /items/1
   # DELETE /items/1.json
   def destroy
+    return render status: 403 if @item.user != curren_user
     @item.destroy
     respond_to do |format|
       format.html { redirect_to items_url, notice: 'Item was successfully destroyed.' }
@@ -69,6 +68,10 @@ class ItemsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def item_params
-      params.require(:item).permit(:user_id, :asin, :title, :thumb_url, :release_date)
+      params.require(:item).permit(:url)
+    end
+
+    def validate_user
+      return redirect_to :root if current_user.nil?
     end
 end

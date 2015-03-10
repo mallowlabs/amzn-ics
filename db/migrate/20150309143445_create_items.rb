@@ -9,5 +9,7 @@ class CreateItems < ActiveRecord::Migration
 
       t.timestamps null: false
     end
+
+    add_index :items, :release_date, unique: false
   end
 end

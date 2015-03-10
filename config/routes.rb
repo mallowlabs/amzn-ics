@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :items
+  resources :items, except: :edit
 
   root to: 'top#index'
   get 'top/index'

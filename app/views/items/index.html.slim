@@ -1,29 +1,23 @@
-h1 Listing items
+h4 All items
 
-table
+table.table.table-bordered
   thead
     tr
-      th User
-      th Asin
+      th Release
+      th Image
       th Title
-      th Thumb url
-      th Release date
-      th
-      th
       th
 
   tbody
     - @items.each do |item|
       tr
-        td = item.user_id
-        td = item.asin
-        td = item.title
-        td = item.thumb_url
-        td = item.release_date
-        td = link_to 'Show', item
-        td = link_to 'Edit', edit_item_path(item)
-        td = link_to 'Destroy', item, data: {:confirm => 'Are you sure?'}, :method => :delete
+        td = short(item.release_date)
+        td = image_tag item.thumb_url, class: 'thumb', alt: item.title, title: item.title
+        td = link_to item.title, item.amazon_url
+        td
+          - if item.user == current_user
+            = link_to 'Destroy', item, data: {:confirm => 'Are you sure?'}, :method => :delete, class: 'btn btn-danger'
 
 br
 
-= link_to 'New Item', new_item_path
+= link_to 'New Item', new_item_path, class: 'btn btn-default'
