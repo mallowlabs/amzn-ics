@@ -52,7 +52,7 @@ class ItemsController < ApplicationController
   # DELETE /items/1
   # DELETE /items/1.json
   def destroy
-    return render status: 403 if @item.user != curren_user
+    return render status: 403 if @item.user != current_user
     @item.destroy
     respond_to do |format|
       format.html { redirect_to items_url, notice: 'Item was successfully destroyed.' }
