@@ -12,7 +12,7 @@ class ItemsController < ApplicationController
       format.json
       format.ics do
         calendar = Icalendar::Calendar.new
-        calendar.append_custom_property('X-WR-CALNAME;VALUE=TEXT', "amzn-ics")
+        calendar.append_custom_property('X-WR-CALNAME', "amzn-ics")
         @items.each do |item|
           calendar.add_event(item.to_ics)
         end
