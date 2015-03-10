@@ -17,7 +17,7 @@ table.table.table-bordered
     - @items.each do |item|
       tr
         td = short(item.release_date)
-        td = image_tag item.thumb_url, class: 'thumb', alt: item.title, title: item.title
+        td = item.thumb_url.nil? ? '' : image_tag(item.thumb_url, class: 'thumb', alt: item.title, title: item.title)
         td = link_to item.title, item.amazon_url
         td
           - if item.user == current_user
