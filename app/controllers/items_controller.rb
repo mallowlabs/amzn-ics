@@ -14,7 +14,7 @@ class ItemsController < ApplicationController
         calendar = Icalendar::Calendar.new
         calendar.append_custom_property('X-WR-CALNAME', "amzn-ics")
         @items.each do |item|
-          calendar.add_event(item.to_ics)
+          calendar.add_event(item.to_ics(request.host))
         end
         calendar.publish
         render text: calendar.to_ical

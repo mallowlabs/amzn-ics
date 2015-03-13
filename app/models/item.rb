@@ -11,12 +11,13 @@ class Item < ActiveRecord::Base
 
   UserAgent = 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0)'
 
-  def to_ics
+  def to_ics(host)
     event = Icalendar::Event.new
     event.dtstart = Icalendar::Values::Date.new(self.release_date, {'TZID' => ['Asia/Tokyo']})
     event.dtstamp = self.updated_at
     event.summary = self.title
     event.url = self.amazon_url
+    event.uid = "#{Digest::MD5.hexdigest(self.amazon_url)}@#{host}"
     event
   end
 
