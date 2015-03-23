@@ -15,13 +15,8 @@ RSpec.describe "items/new", type: :view do
 
     assert_select "form[action=?][method=?]", items_path, "post" do
 
-      assert_select "input#item_user_id[name=?]", "item[user_id]"
+      assert_select "input#item_url[name=?]", "item[url]"
 
-      assert_select "input#item_asin[name=?]", "item[asin]"
-
-      assert_select "input#item_title[name=?]", "item[title]"
-
-      assert_select "input#item_thumb_url[name=?]", "item[thumb_url]"
     end
   end
 end

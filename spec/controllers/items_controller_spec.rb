@@ -53,6 +53,7 @@ RSpec.describe ItemsController, type: :controller do
   end
 
   describe "GET #new" do
+    before { sign_in User.create!(name: 'name', nickname: 'nickname') }
     it "assigns a new item as @item" do
       get :new, {}, valid_session
       expect(assigns(:item)).to be_a_new(Item)
