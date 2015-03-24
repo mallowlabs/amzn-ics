@@ -9,7 +9,7 @@ class DotenvConfig
       if provider
         provider.to_sym
       else
-        :github
+        :twitter
       end
     end
 
