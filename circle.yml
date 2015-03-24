@@ -1,4 +1,7 @@
 machine:
   ruby:
     version: 2.2.1
+notify:
+  webhooks:
+    - url: $DASHBOZU_URL
 
