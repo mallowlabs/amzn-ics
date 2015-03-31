@@ -6,7 +6,8 @@ RSpec.describe "items/show", type: :view do
       :user_id => 1,
       :asin => "Asin",
       :title => "Title",
-      :thumb_url => "Thumb Url"
+      :thumb_url => "Thumb Url",
+      :release_date => Time.now
     ))
   end
 
