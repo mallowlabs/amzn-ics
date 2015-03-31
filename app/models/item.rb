@@ -41,7 +41,7 @@ class Item < ActiveRecord::Base
     res = Amazon::Ecs.item_lookup(asin, {response_group: 'Medium', country: 'jp'}).first_item
     item.asin = res.get('ASIN')
     item.title = res.get('ItemAttributes/Title')
-    item.release_date = res.get('ItemAttributes/ReleaseDate')
+    item.release_date = res.get('ItemAttributes/ReleaseDate') || res.get('ItemAttributes/PublicationDate')
     item.thumb_url = res.get('ImageSets/ImageSet/SmallImage/URL')
     item
   end
