@@ -18,6 +18,7 @@ class Item < ActiveRecord::Base
     event.dtstamp = self.updated_at
     event.summary = self.title
     event.url = self.amazon_url
+    event.description = self.amazon_url
     event.uid = "#{Digest::MD5.hexdigest(self.amazon_url)}@#{host}"
     event
   end
