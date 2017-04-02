@@ -53,7 +53,7 @@ class Item < ActiveRecord::Base
       return self.asin_to_item(asin)
     rescue => e
       retry_count += 1
-      logger.error e.message
+      Rails.logger.error e.message
       if retry_count < 5
         sleep(3)
         retry
