@@ -1,0 +1,29 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/ruby:2.3.8-node
+        environment:
+          RAILS_ENV: test
+    steps:
+      - checkout
+      - restore_cache:
+          key: rails-bundle-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: bundle install
+          command: |
+             bundle install --path .bundle
+      - save_cache:
+          key: rails-bundle-{{ checksum "Gemfile.lock" }}
+          paths:
+            - .bundle
+      - run:
+          name: DB Setup
+          command: |
+            bundle exec rake db:create db:schema:load --trace
+            bundle exec rake db:migrate
+      - run:
+          name: rspec
+          command: |
+            bundle exec rspec
+

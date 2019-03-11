@@ -1,7 +1,0 @@
-machine:
-  ruby:
-    version: 2.2.1
-notify:
-  webhooks:
-    - url: https://cf-dashbozu.herokuapp.com/hook/16e0026b99284dd1915d3b4a5a6d40f4/circle_ci
-
